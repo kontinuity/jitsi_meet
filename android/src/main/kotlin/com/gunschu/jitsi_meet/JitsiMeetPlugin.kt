@@ -37,7 +37,7 @@ public class SelfDestroyJitsiMeetActivity() : JitsiMeetActivity() {
         val delayedHandler = Handler()
         delayedHandler.postDelayed({
             Log.d(SELF_DESTROY_JITSI_MEET_TAG, "Selfdestroying ... now!")
-            finish()
+            leave()
         }, durationInMillisconds)
     }
 }
