@@ -1,5 +1,8 @@
 package com.gunschu.jitsi_meet
 
+import android.content.Intent
+import android.os.Bundle
+import android.os.Handler
 import android.app.Activity
 import android.util.Log
 import androidx.annotation.NonNull
@@ -16,6 +19,28 @@ import org.jitsi.meet.sdk.JitsiMeetConferenceOptions
 import org.jitsi.meet.sdk.JitsiMeetUserInfo
 import java.net.URL
 
+private const val ACTION_JITSI_MEET_CONFERENCE = "org.jitsi.meet.CONFERENCE"
+private const val JITSI_MEET_CONFERENCE_OPTIONS = "JitsiMeetConferenceOptions"
+private const val SELF_DESTROY_JITSI_MEET_DURATION_IN_MINUTES = "SelfDestroyJitsiMeetDurationInMinutes"
+
+public class SelfDestroyJitsiMeetMeetActivity() : JitsiMeetActivity() {
+    val SELF_DESTROY_JITSI_MEET_TAG = "SELF_DESTROY_JITSI_MEET"
+
+    override protected fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        var durationInMinutes: Int = getIntent().getIntExtra(SELF_DESTROY_JITSI_MEET_DURATION_IN_MINUTES, -1)
+        var durationInMillisconds: Long = durationInMinutes * 60L * 1000L;
+        Log.d(SELF_DESTROY_JITSI_MEET_TAG, "SelfDestroyJitsiMeetMeetActivity.onCreate: durationInMinutes: $durationInMinutes")
+        Log.d(SELF_DESTROY_JITSI_MEET_TAG, "SelfDestroyJitsiMeetMeetActivity.onCreate: durationInMillisconds: $durationInMillisconds")
+
+        val delayedHandler = Handler()
+        delayedHandler.postDelayed({
+            Log.d(SELF_DESTROY_JITSI_MEET_TAG, "Selfdestroying ... now!")
+            finish()
+        }, durationInMillisconds)
+    }
+}
 
 /** JitsiMeetPlugin */
 public class JitsiMeetPlugin() : FlutterPlugin, MethodCallHandler, ActivityAware {
@@ -117,7 +142,15 @@ public class JitsiMeetPlugin() : FlutterPlugin, MethodCallHandler, ActivityAware
 
         // Launch the new activity with the given options. The launch() method takes care
         // of creating the required Intent and passing the options.
-        JitsiMeetActivity.launch(activity, options)
+
+        var durationInMinutes = call.argument<Int>("durationInMinutes")
+
+        val intent = Intent(activity, SelfDestroyJitsiMeetMeetActivity::class.java)
+        intent.setAction(ACTION_JITSI_MEET_CONFERENCE)
+        intent.putExtra(JITSI_MEET_CONFERENCE_OPTIONS, options)
+        intent.putExtra(SELF_DESTROY_JITSI_MEET_DURATION_IN_MINUTES, durationInMinutes)
+        activity?.startActivity(intent)
+
         result.success("Successful joined room: $room")
     }
 
