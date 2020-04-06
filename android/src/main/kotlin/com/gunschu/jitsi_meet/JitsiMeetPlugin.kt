@@ -23,7 +23,7 @@ private const val ACTION_JITSI_MEET_CONFERENCE = "org.jitsi.meet.CONFERENCE"
 private const val JITSI_MEET_CONFERENCE_OPTIONS = "JitsiMeetConferenceOptions"
 private const val SELF_DESTROY_JITSI_MEET_DURATION_IN_MINUTES = "SelfDestroyJitsiMeetDurationInMinutes"
 
-public class SelfDestroyJitsiMeetMeetActivity() : JitsiMeetActivity() {
+public class SelfDestroyJitsiMeetActivity() : JitsiMeetActivity() {
     val SELF_DESTROY_JITSI_MEET_TAG = "SELF_DESTROY_JITSI_MEET"
 
     override protected fun onCreate(savedInstanceState: Bundle?) {
@@ -31,8 +31,8 @@ public class SelfDestroyJitsiMeetMeetActivity() : JitsiMeetActivity() {
 
         var durationInMinutes: Int = getIntent().getIntExtra(SELF_DESTROY_JITSI_MEET_DURATION_IN_MINUTES, -1)
         var durationInMillisconds: Long = durationInMinutes * 60L * 1000L;
-        Log.d(SELF_DESTROY_JITSI_MEET_TAG, "SelfDestroyJitsiMeetMeetActivity.onCreate: durationInMinutes: $durationInMinutes")
-        Log.d(SELF_DESTROY_JITSI_MEET_TAG, "SelfDestroyJitsiMeetMeetActivity.onCreate: durationInMillisconds: $durationInMillisconds")
+        Log.d(SELF_DESTROY_JITSI_MEET_TAG, "SelfDestroyJitsiMeetActivity.onCreate: durationInMinutes: $durationInMinutes")
+        Log.d(SELF_DESTROY_JITSI_MEET_TAG, "SelfDestroyJitsiMeetActivity.onCreate: durationInMillisconds: $durationInMillisconds")
 
         val delayedHandler = Handler()
         delayedHandler.postDelayed({
@@ -145,7 +145,7 @@ public class JitsiMeetPlugin() : FlutterPlugin, MethodCallHandler, ActivityAware
 
         var durationInMinutes = call.argument<Int>("durationInMinutes")
 
-        val intent = Intent(activity, SelfDestroyJitsiMeetMeetActivity::class.java)
+        val intent = Intent(activity, SelfDestroyJitsiMeetActivity::class.java)
         intent.setAction(ACTION_JITSI_MEET_CONFERENCE)
         intent.putExtra(JITSI_MEET_CONFERENCE_OPTIONS, options)
         intent.putExtra(SELF_DESTROY_JITSI_MEET_DURATION_IN_MINUTES, durationInMinutes)

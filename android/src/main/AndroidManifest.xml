@@ -2,6 +2,6 @@
     package="com.gunschu.jitsi_meet">
 
     <application>
-        <activity android:name="com.gunschu.jitsi_meet.SelfDestroyJitsiMeetMeetActivity"></activity>
+        <activity android:name="com.gunschu.jitsi_meet.SelfDestroyJitsiMeetActivity"></activity>
     </application>
 </manifest>
