@@ -14,7 +14,7 @@ class JitsiMeet {
   );
 
   static Future<JitsiMeetingResponse> joinMeeting(
-      JitsiMeetingOptions options, int durationInMinutes) async {
+      JitsiMeetingOptions options, int durationInSeconds) async {
     assert(options != null, "options are null");
     assert(options.room != null, "room is null");
     assert(options.room.trim().isNotEmpty, "room is empty");
@@ -39,7 +39,7 @@ class JitsiMeet {
           'videoMuted': options.videoMuted,
           'userDisplayName': options.userDisplayName,
           'userEmail': options.userEmail,
-          'durationInMinutes': durationInMinutes,
+          'durationInSeconds': durationInSeconds,
         })
         .then((message) =>
             JitsiMeetingResponse(isSuccess: true, message: message))
