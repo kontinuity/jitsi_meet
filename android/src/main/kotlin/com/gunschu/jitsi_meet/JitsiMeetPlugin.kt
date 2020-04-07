@@ -24,21 +24,35 @@ private const val JITSI_MEET_CONFERENCE_OPTIONS = "JitsiMeetConferenceOptions"
 private const val SELF_DESTROY_JITSI_MEET_DURATION_IN_MINUTES = "SelfDestroyJitsiMeetDurationInMinutes"
 
 public class SelfDestroyJitsiMeetActivity() : JitsiMeetActivity() {
-    val SELF_DESTROY_JITSI_MEET_TAG = "SELF_DESTROY_JITSI_MEET"
+    val SELF_DESTROY_JITSI_MEET_ACTIVITY_TAG = "SelfDestroyJitsiMeetActivity"
+    var alreadyDestroyed = false
 
     override protected fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         var durationInMinutes: Int = getIntent().getIntExtra(SELF_DESTROY_JITSI_MEET_DURATION_IN_MINUTES, -1)
         var durationInMillisconds: Long = durationInMinutes * 60L * 1000L;
-        Log.d(SELF_DESTROY_JITSI_MEET_TAG, "SelfDestroyJitsiMeetActivity.onCreate: durationInMinutes: $durationInMinutes")
-        Log.d(SELF_DESTROY_JITSI_MEET_TAG, "SelfDestroyJitsiMeetActivity.onCreate: durationInMillisconds: $durationInMillisconds")
+        Log.d(SELF_DESTROY_JITSI_MEET_ACTIVITY_TAG, "onCreate: durationInMinutes: $durationInMinutes")
 
         val delayedHandler = Handler()
         delayedHandler.postDelayed({
-            Log.d(SELF_DESTROY_JITSI_MEET_TAG, "Selfdestroying ... now!")
-            leave()
+            if (alreadyDestroyed) {
+                Log.d(SELF_DESTROY_JITSI_MEET_ACTIVITY_TAG, "Not selfdestroying because already destroyed.")
+            } else {
+                try {
+                    Log.d(SELF_DESTROY_JITSI_MEET_ACTIVITY_TAG, "Selfdestroying ... now!")
+                    leave()
+                } catch (e: Exception) {
+                    Log.e(SELF_DESTROY_JITSI_MEET_ACTIVITY_TAG, "Could not selfdestroy: $e")
+                }
+            }
         }, durationInMillisconds)
+    }
+
+    override public fun onDestroy() {
+        Log.d(SELF_DESTROY_JITSI_MEET_ACTIVITY_TAG, "onDestroy")
+        alreadyDestroyed = true
+        super.onDestroy()
     }
 }
 
