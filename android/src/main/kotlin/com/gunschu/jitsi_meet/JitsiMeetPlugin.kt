@@ -21,7 +21,7 @@ import java.net.URL
 
 private const val ACTION_JITSI_MEET_CONFERENCE = "org.jitsi.meet.CONFERENCE"
 private const val JITSI_MEET_CONFERENCE_OPTIONS = "JitsiMeetConferenceOptions"
-private const val SELF_DESTROY_JITSI_MEET_DURATION_IN_MINUTES = "SelfDestroyJitsiMeetDurationInMinutes"
+private const val SELF_DESTROY_JITSI_MEET_ACTIVITY__DURATION_IN_SECONDS = "SelfDestroyJitsiMeetActivity_DurationInSeconds"
 
 public class SelfDestroyJitsiMeetActivity() : JitsiMeetActivity() {
     val SELF_DESTROY_JITSI_MEET_ACTIVITY_TAG = "SelfDestroyJitsiMeetActivity"
@@ -30,9 +30,9 @@ public class SelfDestroyJitsiMeetActivity() : JitsiMeetActivity() {
     override protected fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        var durationInMinutes: Int = getIntent().getIntExtra(SELF_DESTROY_JITSI_MEET_DURATION_IN_MINUTES, -1)
-        var durationInMillisconds: Long = durationInMinutes * 60L * 1000L;
-        Log.d(SELF_DESTROY_JITSI_MEET_ACTIVITY_TAG, "onCreate: durationInMinutes: $durationInMinutes")
+        var durationInSeconds: Int = getIntent().getIntExtra(SELF_DESTROY_JITSI_MEET_ACTIVITY__DURATION_IN_SECONDS, -1)
+        var durationInMillisconds: Long = durationInSeconds * 1000L;
+        Log.d(SELF_DESTROY_JITSI_MEET_ACTIVITY_TAG, "onCreate: durationInSeconds: $durationInSeconds")
 
         val delayedHandler = Handler()
         delayedHandler.postDelayed({
@@ -157,12 +157,12 @@ public class JitsiMeetPlugin() : FlutterPlugin, MethodCallHandler, ActivityAware
         // Launch the new activity with the given options. The launch() method takes care
         // of creating the required Intent and passing the options.
 
-        var durationInMinutes = call.argument<Int>("durationInMinutes")
+        var durationInSeconds = call.argument<Int>("durationInSeconds")
 
         val intent = Intent(activity, SelfDestroyJitsiMeetActivity::class.java)
         intent.setAction(ACTION_JITSI_MEET_CONFERENCE)
         intent.putExtra(JITSI_MEET_CONFERENCE_OPTIONS, options)
-        intent.putExtra(SELF_DESTROY_JITSI_MEET_DURATION_IN_MINUTES, durationInMinutes)
+        intent.putExtra(SELF_DESTROY_JITSI_MEET_ACTIVITY__DURATION_IN_SECONDS, durationInSeconds)
         activity?.startActivity(intent)
 
         result.success("Successful joined room: $room")
